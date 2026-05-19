@@ -1,0 +1,6 @@
+{
+  "name": "Contest Dashboard",
+  "description": "A real-time dashboard for tracking upcoming coding contests across various platforms like Codeforces, CodeChef, and LeetCode.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
