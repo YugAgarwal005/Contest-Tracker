@@ -23,14 +23,22 @@ async function startServer() {
       console.log('Fetching contests from multiple sources...');
       
       const fetchPrimary = axios.get('https://kontests.net/api/v1/all', {
-        headers: { 'Accept': 'application/json', 'User-Agent': 'ContestHub-Dashboard/1.3' },
+        headers: { 
+          'Accept': 'application/json', 
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' 
+        },
         timeout: 15000 // Increased for stability
       }).then(r => r.data).catch(e => {
         // We have direct fallbacks, so we don't need to log this as a major warning
         return null;
       });
 
-      const fetchCF = axios.get('https://codeforces.com/api/contest.list?gym=false', { timeout: 12000 })
+      const fetchCF = axios.get('https://codeforces.com/api/contest.list?gym=false', { 
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        },
+        timeout: 12000 
+      })
         .then(r => r.data.status === 'OK' ? r.data.result : null)
         .catch(e => {
           console.warn('Codeforces API failed:', e.message);
@@ -48,7 +56,12 @@ async function startServer() {
             }
           }
         `
-      }, { timeout: 12000 })
+      }, { 
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        },
+        timeout: 20000 
+      })
         .then(r => r.data?.data?.allContests || null)
         .catch(e => {
           console.warn('LeetCode API failed:', e.message);
@@ -56,7 +69,9 @@ async function startServer() {
         });
 
       const fetchCC = axios.get('https://www.codechef.com/api/list/contests/all?sort_by=START&sorting_order=asc', {
-        headers: { 'User-Agent': 'Mozilla/5.0' },
+        headers: { 
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' 
+        },
         timeout: 12000
       }).then(r => r.data?.future_contests || null)
         .catch(e => {

@@ -13,23 +13,41 @@ export default async function handler(req, res) {
     }
 
     const fetchPrimary = axios.get('https://kontests.net/api/v1/all', {
-      headers: { 'Accept': 'application/json', 'User-Agent': 'ContestHub-Vercel/1.0' },
-      timeout: 10000 
+      headers: { 
+        'Accept': 'application/json', 
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' 
+      },
+      timeout: 15000 
     }).then(r => r.data).catch(() => null);
 
-    const fetchCF = axios.get('https://codeforces.com/api/contest.list?gym=false', { timeout: 8000 })
+    const fetchCF = axios.get('https://codeforces.com/api/contest.list?gym=false', { 
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+      },
+      timeout: 12000 
+    })
       .then(r => r.data.status === 'OK' ? r.data.result : null)
-      .catch(() => null);
+      .catch((e) => {
+        console.error('Vercel CF Fetch Error:', e.message);
+        return null;
+      });
 
     const fetchLC = axios.post('https://leetcode.com/graphql', {
       query: `{ allContests { title titleSlug startTime duration } }`
-    }, { timeout: 8000 })
+    }, { 
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+      },
+      timeout: 20000 
+    })
       .then(r => r.data?.data?.allContests || null)
       .catch(() => null);
 
     const fetchCC = axios.get('https://www.codechef.com/api/list/contests/all?sort_by=START&sorting_order=asc', {
-      headers: { 'User-Agent': 'Mozilla/5.0' },
-      timeout: 8000
+      headers: { 
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' 
+      },
+      timeout: 12000
     }).then(r => r.data?.future_contests || null)
       .catch(() => null);
 
